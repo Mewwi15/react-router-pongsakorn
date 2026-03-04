@@ -8,6 +8,7 @@ import {
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
+// Components & Pages
 import Navbar from "./components/Navbar";
 import Student from "./Student";
 import Education from "./pages/Education";
@@ -16,13 +17,16 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import TCTForm from "./pages/TCTForm";
 import Login from "./pages/Login";
+import AccessDenied from "./pages/AccessDenied";
 
-// --- ✨ สร้าง Component ยามหน้าด่าน (ProtectedRoute) ---
+/**
+ * --- 🛡️ ProtectedRoute Component ---
+ * ทำหน้าที่ตรวจสอบสิทธิ์การเข้าถึงหน้าเว็บ
+ * ถ้ายังไม่ได้ Login จะส่งผู้ใช้ไปยังหน้า Access Denied
+ */
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
-    // ถ้ายังไม่ล็อกอิน ให้ Alert แจ้งเตือนก่อน
-    alert("Access Denied: Please login to access this page.");
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/access-denied" replace />;
   }
   return children;
 };
@@ -32,6 +36,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // ติดตามสถานะการล็อกอินจาก Firebase
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
@@ -39,35 +44,49 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // หน้าจอ Loading ระหว่างเช็คสถานะ Authentication
   if (loading) {
     return (
       <div
         style={{
           height: "100vh",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#f3f4f6",
+          backgroundColor: "#F9FAFB",
         }}
       >
-        <h2 style={{ color: "#e94057" }}>Loading...</h2>
+        <div className="spinner-pink"></div>
+        <h2
+          style={{
+            color: "#e94057",
+            marginTop: "20px",
+            fontFamily: "sans-serif",
+          }}
+        >
+          Securing Connection...
+        </h2>
       </div>
     );
   }
 
   return (
     <Router>
-      {/* โชว์ Navbar เฉพาะตอนล็อกอินแล้ว */}
+      {/* แสดง Navbar เฉพาะเมื่อผู้ใช้ล็อกอินแล้วเท่านั้น */}
       {user && <Navbar />}
 
       <Routes>
-        {/* หน้า Login: ถ้าล็อกอินแล้วจะเด้งไปหน้าแรกทันที */}
+        {/* หน้า Login: ถ้าล็อกอินแล้วจะ Redirect ไปหน้าหลัก (/) */}
         <Route
           path="/login"
           element={!user ? <Login /> : <Navigate to="/" />}
         />
 
-        {/* --- 🛡️ การใช้ ProtectedRoute ดักทุก Path --- */}
+        {/* หน้าแจ้งเตือนเมื่อพยายามเข้าถึงโดยไม่ได้รับอนุญาต */}
+        <Route path="/access-denied" element={<AccessDenied />} />
+
+        {/* --- 🔒 กลุ่มหน้าเว็บที่ต้องล็อกอินก่อนถึงจะเข้าได้ (Protected Routes) --- */}
         <Route
           path="/"
           element={
@@ -113,7 +132,11 @@ function App() {
           }
         />
 
-        <Route path="*" element={<NotFound />} />
+        {/* หน้า 404 - Not Found */}
+        <Route
+          path="*"
+          element={user ? <NotFound /> : <Navigate to="/login" />}
+        />
       </Routes>
     </Router>
   );
