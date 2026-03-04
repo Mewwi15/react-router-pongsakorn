@@ -20,12 +20,12 @@ import Login from "./pages/Login";
 import AccessDenied from "./pages/AccessDenied";
 
 /**
- * --- 🛡️ ProtectedRoute Component ---
- * ทำหน้าที่ตรวจสอบสิทธิ์การเข้าถึงหน้าเว็บ
- * ถ้ายังไม่ได้ Login จะส่งผู้ใช้ไปยังหน้า Access Denied
+ * --- 🛡️ Path Security Guard ---
+ * สำหรับดักคนที่พยายามใส่ Path ตรงๆ เข้ามาโดยไม่ผ่านการ Login
  */
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
+    // ถ้าไม่มี User (ไม่ได้ Login) แต่พยายามเข้าหน้าอื่น ให้ส่งไปหน้า Access Denied ทันที
     return <Navigate to="/access-denied" replace />;
   }
   return children;
@@ -36,7 +36,6 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ติดตามสถานะการล็อกอินจาก Firebase
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
@@ -44,58 +43,44 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // หน้าจอ Loading ระหว่างเช็คสถานะ Authentication
   if (loading) {
     return (
       <div
         style={{
           height: "100vh",
           display: "flex",
-          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: "#F9FAFB",
         }}
       >
         <div className="spinner-pink"></div>
-        <h2
-          style={{
-            color: "#e94057",
-            marginTop: "20px",
-            fontFamily: "sans-serif",
-          }}
-        >
-          Securing Connection...
-        </h2>
       </div>
     );
   }
 
   return (
     <Router>
-      {/* แสดง Navbar เฉพาะเมื่อผู้ใช้ล็อกอินแล้วเท่านั้น */}
+      {/* Navbar จะขึ้นเฉพาะตอน Login สำเร็จแล้วเท่านั้น */}
       {user && <Navbar />}
 
       <Routes>
-        {/* หน้า Login: ถ้าล็อกอินแล้วจะ Redirect ไปหน้าหลัก (/) */}
+        {/* 1. หน้าด่านแรก: ถ้ายังไม่ Login จะเจอหน้า Login เสมอ */}
         <Route
           path="/login"
           element={!user ? <Login /> : <Navigate to="/" />}
         />
 
-        {/* หน้าแจ้งเตือนเมื่อพยายามเข้าถึงโดยไม่ได้รับอนุญาต */}
+        {/* 2. หน้ากับดัก: สำหรับคนเจาะ Path */}
         <Route path="/access-denied" element={<AccessDenied />} />
 
-        {/* --- 🔒 กลุ่มหน้าเว็บที่ต้องล็อกอินก่อนถึงจะเข้าได้ (Protected Routes) --- */}
+        {/* 3. ปกป้องทุกหน้าด้วย ProtectedRoute */}
         <Route
           path="/"
-          element={
-            <ProtectedRoute user={user}>
-              <Student />
-            </ProtectedRoute>
-          }
+          element={user ? <Student /> : <Navigate to="/login" />}
         />
 
+        {/* สำหรับ Path อื่นๆ ถ้าแอบเข้าจะโดนส่งไป Access Denied */}
         <Route
           path="/education"
           element={
@@ -132,7 +117,6 @@ function App() {
           }
         />
 
-        {/* หน้า 404 - Not Found */}
         <Route
           path="*"
           element={user ? <NotFound /> : <Navigate to="/login" />}
