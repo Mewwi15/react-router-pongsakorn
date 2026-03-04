@@ -1,0 +1,269 @@
+/* src/pages/Login.css */
+
+.login-page-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- พื้นหลังแสงฟุ้ง --- */
+.login-blob-1 {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(233, 64, 87, 0.12) 0%,
+    transparent 60%
+  );
+  top: -100px;
+  left: -150px;
+  border-radius: 50%;
+  animation: floatBlob 8s infinite alternate ease-in-out;
+}
+
+.login-blob-2 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 138, 157, 0.12) 0%,
+    transparent 60%
+  );
+  bottom: -50px;
+  right: -100px;
+  border-radius: 50%;
+  animation: floatBlob 6s infinite alternate-reverse ease-in-out;
+}
+
+/* --- การ์ดกระจก --- */
+.login-glass-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  width: 100%;
+  max-width: 440px;
+  padding: 50px 40px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- 🚀 ลูกเล่นตรงกลาง: Levitating Tech Core --- */
+.showcase-core {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* แกนกลาง */
+.core-center {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary, #e94057), #ff8a9d);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  color: white;
+  box-shadow: 0 15px 35px rgba(233, 64, 87, 0.3);
+  z-index: 2;
+  animation: floatCenter 4s ease-in-out infinite;
+}
+
+/* วงแหวนกระจายแสง */
+.core-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(233, 64, 87, 0.3);
+  border-radius: 50%;
+  animation: spinRing 15s linear infinite;
+}
+
+/* ไอคอนลอยตัวรอบๆ (Web, Edu, Hardware) */
+.floating-badge {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #fff0f3;
+  z-index: 3;
+}
+
+.badge-1 {
+  top: -10px;
+  left: -10px;
+  color: #61dafb;
+  animation: floatBadge 3s infinite ease-in-out alternate;
+} /* โค้ด/React */
+.badge-2 {
+  bottom: -5px;
+  right: -15px;
+  color: var(--primary, #e94057);
+  animation: floatBadge 4s infinite ease-in-out alternate-reverse;
+} /* การศึกษา */
+.badge-3 {
+  top: 40px;
+  right: -25px;
+  color: #10b981;
+  animation: floatBadge 3.5s infinite ease-in-out alternate;
+  animation-delay: 1s;
+} /* ฮาร์ดแวร์ */
+
+/* --- ตัวอักษร --- */
+.login-title {
+  font-size: 1.9rem;
+  color: #1f2937;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+/* เอฟเฟกต์ข้อความสีรุ้ง/ชมพูวิ่งได้ */
+.login-title span {
+  background: linear-gradient(
+    270deg,
+    var(--primary, #e94057),
+    #ff8a9d,
+    var(--primary, #e94057)
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shineText 3s linear infinite;
+}
+
+.login-tags {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 35px;
+}
+
+.tag-item {
+  background: #fff0f3;
+  color: var(--primary, #e94057);
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* --- ปุ่ม Google --- */
+.btn-google-modern {
+  width: 100%;
+  background: white;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  padding: 15px;
+  border-radius: 16px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.btn-google-modern:hover:not(:disabled) {
+  border-color: var(--primary, #e94057);
+  background: #fff0f3;
+  color: var(--primary, #e94057);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(233, 64, 87, 0.15);
+}
+
+.btn-google-modern img {
+  width: 24px;
+  height: 24px;
+}
+
+.spinner-pink {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(233, 64, 87, 0.2);
+  border-top-color: var(--primary, #e94057);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* --- Keyframes Animations --- */
+@keyframes floatBlob {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-30px) scale(1.05);
+  }
+}
+@keyframes floatCenter {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 45px rgba(233, 64, 87, 0.4);
+  }
+}
+@keyframes floatBadge {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes spinRing {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shineText {
+  to {
+    background-position: 200% center;
+  }
+}
